@@ -1,0 +1,2 @@
+/usr/bin/ar qc libfranka_common.a CMakeFiles/franka_common.dir/src/common.cpp.o
+/usr/bin/ranlib libfranka_common.a

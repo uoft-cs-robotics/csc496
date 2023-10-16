@@ -1,0 +1,2 @@
+/usr/bin/ar qc libleader.a CMakeFiles/leader.dir/src/teleop/leader.cpp.o
+/usr/bin/ranlib libleader.a

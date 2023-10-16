@@ -1,0 +1,2 @@
+/usr/bin/ar qc libnetwork_client.a CMakeFiles/network_client.dir/src/teleop/network_client.cpp.o
+/usr/bin/ranlib libnetwork_client.a

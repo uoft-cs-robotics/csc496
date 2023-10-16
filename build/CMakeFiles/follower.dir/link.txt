@@ -1,2 +1,0 @@
-/usr/bin/ar qc libfollower.a CMakeFiles/follower.dir/src/teleop/follower.cpp.o
-/usr/bin/ranlib libfollower.a

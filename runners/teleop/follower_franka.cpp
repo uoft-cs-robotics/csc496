@@ -6,6 +6,34 @@
 
 #include <iostream>
 #include "teleop/follower.h"
+#include "ik.h"
+#include "context.h"
+
+namespace robotContext
+{
+    franka::Model *model;
+    franka::Robot *robot;  
+    franka::RobotState initial_state;
+}
+
+
+// franka::JointVelocities ik_control_loop( franka::RobotState _fstate, franka::RobotState _lstate, franka::Duration _period, bool is_state)
+// {
+//     // you can control state in this loop (if is_state is true) 
+//     std::array<double, 7> current_position = {0, 0, 0, 0, 0, 0, 0};
+//     std::array<double, 7> calculated_torque = {0, 0, 0, 0, 0, 0, 0};
+//     if ( !is_state )
+//     {
+//         current_position = _fstate.q_d;
+//     }
+//     else
+//     {
+//         current_position = _lstate.q;
+//     }
+
+
+// }
+
 
 franka::Torques control_loop( franka::RobotState _fstate, franka::RobotState _lstate, franka::Duration _period, bool is_state)
 {
@@ -59,12 +87,18 @@ int main(int argc, char** argv)
         return 1;
     }
 
+    franka::Robot robot_(argv[2]);
+    robotContext::robot = &robot_; 
+    franka::Model model_ = robotContext::robot->loadModel();
+    robotContext::model = &model_; 
+
+
     teleop::Follower follower(argv[1], argv[2]) ;
     std::cout << "WARNING: The robot will go to ready pose! "
         << "Please make sure to have the user stop button at hand!" << std::endl
         << "Press Enter to continue..." << std::endl;
     std::cin.ignore();
-    follower.GoHome();
+    robotContext::initial_state = follower.GoHome();
 
     std::cout << "WARNING: The robot will try to imitate leader robot! "
         << "Please make sure to have the user stop button at hand!" << std::endl

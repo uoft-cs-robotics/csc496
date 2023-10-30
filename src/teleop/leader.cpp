@@ -65,7 +65,6 @@ void Leader::Control( std::function<franka::Torques(
     std::atomic_bool running{true};
     std::string file_name = "/home/lueder/Desktop/log_leader.txt";
     std::thread print_thread = std::thread(logger::log_data, std::cref(print_rate), std::ref(logger::print_data), std::ref(running), std::ref(file_name));
-
     robotContext::robot->control(
         [this, &custom_control_loop]( const franka::RobotState& robot_state, franka::Duration period )
         -> franka::Torques
@@ -96,6 +95,10 @@ void Leader::Control( std::function<franka::Torques(
     }      
 
 }
+
+
+
+
 
 void Leader::Read( std::function<bool( 
     const franka::RobotState& _fstate,  const franka::RobotState& _lstate, 

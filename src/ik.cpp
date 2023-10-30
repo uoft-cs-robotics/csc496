@@ -25,6 +25,66 @@ InverseKinematics::InverseKinematics(int start, IKType type=IKType::DAMPED_LS/*I
 InverseKinematics::~InverseKinematics(){}
 
 
+franka::JointVelocities InverseKinematics::operator() ( franka::RobotState _fstate, franka::RobotState _lstate, franka::RobotState initial_state , franka::Duration _period, bool is_state){
+    std::array< double, 16 >  desired_abs_pose;
+    if ( !is_state )
+    {
+        desired_abs_pose = _fstate.O_T_EE_d ;
+    }
+    else
+    {
+        desired_abs_pose = _lstate.O_T_EE;
+    }
+
+
+
+
+    Eigen::Affine3d initial_ee_pose_transform(Eigen::Matrix4d::Map(initial_state.O_T_EE.data()));
+    Eigen::Affine3d ee_goal_pose_transform(Eigen::Matrix4d::Map(desired_abs_pose.data()));
+    // exit(0);
+    count++;
+    Eigen::Affine3d ee_transform(Eigen::Matrix4d::Map(_fstate.O_T_EE.data()));
+    Eigen::Vector3d ee_translation_now(ee_transform.translation()), 
+                    target_ee_translation,
+                    initial_ee_translation(initial_ee_pose_transform.translation());   
+
+    Eigen::Quaterniond ee_ori_now_quat(ee_transform.linear());
+    ee_ori_now_quat.normalize();
+    Eigen::Quaterniond  target_ee_ori_quat;
+    //Eigen::AngleAxisd ee_orientation_axis_now(ee_orientation_quat_now);
+    if (ControllersBase::control_mode_ == ControlMode::DELTA){
+        target_ee_translation = ee_translation_now + Eigen::Vector3d(ee_goal_pose_transform.translation()); 
+        //Eigen::Vector4d ee_ori_goal_vec = ee_goal_pose.tail(4);
+        Eigen::Quaterniond ee_ori_goal_vec(ee_goal_pose_transform.linear());
+        ee_ori_goal_vec.normalize();
+        target_ee_ori_quat = utils::quat_multiplication(ee_ori_goal_vec, 
+                                                        ee_ori_now_quat);
+    }
+    else{
+        target_ee_translation = initial_ee_translation + (Eigen::Vector3d(ee_goal_pose_transform.translation()) - initial_ee_translation);
+        // Eigen::Vector4d ee_ori_goal_vec = ee_goal_pose.tail(4);
+        target_ee_ori_quat = Eigen::Quaterniond(ee_goal_pose_transform.linear());
+        target_ee_ori_quat.normalize();
+    }
+    auto jacobianArray = robotContext::model->zeroJacobian(franka::Frame::kEndEffector, _fstate); 
+    Eigen::Map<const Eigen::Matrix<double, 6, DOF>> jacobian(jacobianArray.data());
+    Eigen::Map<const Eigen::Matrix<double, DOF, 1>> joint_angles_now(_fstate.q.data());
+    Eigen::Vector3d ee_position_error = target_ee_translation - ee_translation_now;
+    Eigen::AngleAxisd ee_ori_error_aa = utils::get_ori_error_aa(target_ee_ori_quat, ee_ori_now_quat);
+    Eigen::Quaterniond ee_ori_error_q = utils::get_ori_error_quat(target_ee_ori_quat, ee_ori_now_quat);
+    std::array<double, DOF> output_arr = _compute_target_joint_angle_pos(joint_angles_now,
+                                                                      jacobian, 
+                                                                      ee_position_error, 
+                                                                      ee_ori_error_aa);
+    std::array<double, DOF> desired_j_pos_limited = franka::limitRate(franka::kMaxJointVelocity,
+                                                                franka::kMaxJointAcceleration, 
+                                                                franka::kMaxJointJerk,
+                                                                output_arr,
+                                                                _fstate.dq_d,
+                                                                _fstate.ddq_d);
+    franka::JointVelocities output_limited(desired_j_pos_limited);                                                                   
+    return output_limited;                                                                
+} 
 
 franka::JointVelocities InverseKinematics::operator() (const franka::RobotState& robot_state, const franka::Duration &period, const Eigen::Matrix4d &ee_goal_pose_array){
     //reads reference signal every 10ms

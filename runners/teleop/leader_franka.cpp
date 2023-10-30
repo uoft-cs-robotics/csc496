@@ -12,6 +12,7 @@ namespace robotContext
 {
     franka::Model *model;
     franka::Robot *robot;  
+    bool is_started_receiving = false;     
 }
 
 
@@ -42,6 +43,7 @@ franka::Torques control_loop_joint_position_coupling( franka::RobotState _fstate
     }
     else{
         follower_joint_positions = _fstate.q;
+        robotContext::is_started_receiving = true;
     }
 
     for (int i = 0; i < _lstate.q.size(); i++)
@@ -56,7 +58,10 @@ franka::Torques control_loop_joint_position_coupling( franka::RobotState _fstate
                                 calculated_torque[2], calculated_torque[3] ,
                                 calculated_torque[4] , calculated_torque[5],
                                 calculated_torque[6] }};
-    return output_torque;
+    if(robotContext::is_started_receiving && !is_state)
+        return MotionFinished(output_torque);
+    else
+        return output_torque;
 }
 
 franka::Torques control_loop_joint_torque_coupling( franka::RobotState _fstate, franka::RobotState _lstate, franka::Duration _period, bool is_state)
@@ -66,11 +71,11 @@ franka::Torques control_loop_joint_torque_coupling( franka::RobotState _fstate, 
     std::array<double, 7> calculated_torque = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};  
     std::vector<double> K_tau_scaling = {0.9, 0.9, 0.45, 0.9, 0.45, 0.9, 0.9};    
     if (!is_state){
-;
+        ;   
     }
     else{
 
-
+        robotContext::is_started_receiving = true;
         // std::array<double, 7> follower_gravity_tau = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; 
         std::array<double, 7> follower_gravity_tau = (*robotContext::model).gravity(_fstate);
 
@@ -92,7 +97,11 @@ franka::Torques control_loop_joint_torque_coupling( franka::RobotState _fstate, 
                                 calculated_torque[2], calculated_torque[3] ,
                                 calculated_torque[4] , calculated_torque[5],
                                 calculated_torque[6] }};
-    return output_torque;    
+    
+    if(robotContext::is_started_receiving && !is_state)
+        return MotionFinished(output_torque);
+    else
+        return output_torque;   
 }
 
 bool read_loop( franka::RobotState _fstate, franka::RobotState _lstate, franka::Duration _period, bool is_state)
@@ -134,9 +143,10 @@ int main(int argc, char** argv)
     std::cin.ignore();
     
     // leader.Read(read_loop);
-    // leader.Control( control_loop_no_feedback);
-    // leader.Control(control_loop_joint_position_coupling);
-    leader.Control(control_loop_joint_torque_coupling);
+
+    leader.Control( control_loop_no_feedback);
+    leader.Control(control_loop_joint_position_coupling);
+    // leader.Control(control_loop_joint_torque_coupling);
 
     std::cout << "Done" << std::endl;
     return 0;

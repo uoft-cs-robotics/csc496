@@ -17,6 +17,7 @@ public:
     InverseKinematics(int start, IKType type); 
     ~InverseKinematics();
     franka::JointVelocities operator()(const franka::RobotState&, const franka::Duration &period, const Eigen::Matrix4d &ee_goal_pose_array);
+    franka::JointVelocities operator()(franka::RobotState _fstate, franka::RobotState _lstate, franka::RobotState initial_state , franka::Duration _period, bool is_state);
 private: 
     IKType type_; 
     //std::array<double, 6> pose_command = {{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}}; 

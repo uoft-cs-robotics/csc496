@@ -134,6 +134,7 @@ int main(int argc, char** argv)
     std::cin.ignore();
     
     // leader.Read(read_loop);
+
     // leader.Control( control_loop_no_feedback);
     // leader.Control(control_loop_joint_position_coupling);
     leader.Control(control_loop_joint_torque_coupling);

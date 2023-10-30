@@ -97,6 +97,10 @@ void Leader::Control( std::function<franka::Torques(
 
 }
 
+
+
+
+
 void Leader::Read( std::function<bool( 
     const franka::RobotState& _fstate,  const franka::RobotState& _lstate, 
     franka::Duration period,  bool _is_leader_state_received )> read_loop)

@@ -114,20 +114,22 @@ void Follower::ScaledMotionControl(  std::function<franka::JointVelocities(
             _master_state = server._master_state;
             is_state_received = server.is_state_received;
 
-            if (logger::print_data.mutex.try_lock() && is_state_received) {
-                logger::print_data.has_data = true;
-                logger::print_data.robot_state = robot_state;
-                logger::print_data.mutex.unlock();
-            }            
+            // if (logger::print_data.mutex.try_lock() && is_state_received) {
+            //     logger::print_data.has_data = true;
+            //     logger::print_data.robot_state = robot_state;
+            //     logger::print_data.mutex.unlock();
+            // }            
             // call user callback
             franka::JointVelocities _vels = ik_control_loop(_slave_state, _master_state, period, is_state_received);
+
+            // franka::JointVelocities zero_vels{{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}};
             return _vels;
         }
 
     );
-    if (print_thread.joinable()) {
-    print_thread.join();
-    }  
+    // if (print_thread.joinable()) {
+    // print_thread.join();
+    // }  
     
 }            
 

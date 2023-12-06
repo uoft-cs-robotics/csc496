@@ -121,8 +121,6 @@ void Follower::ScaledMotionControl(  std::function<franka::JointVelocities(
             }            
             // call user callback
             franka::JointVelocities _vels = ik_control_loop(_slave_state, _master_state, period, is_state_received);
-
-            // franka::JointVelocities zero_vels{{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}};
             return _vels;
         }
 

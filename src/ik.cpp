@@ -36,9 +36,6 @@ franka::JointVelocities InverseKinematics::operator() ( franka::RobotState _fsta
         desired_abs_pose = _lstate.O_T_EE;
     }
 
-
-
-
     Eigen::Affine3d initial_ee_pose_transform(Eigen::Matrix4d::Map(initial_state.O_T_EE.data()));
     Eigen::Affine3d ee_goal_pose_transform(Eigen::Matrix4d::Map(desired_abs_pose.data()));
     // exit(0);
@@ -61,7 +58,10 @@ franka::JointVelocities InverseKinematics::operator() ( franka::RobotState _fsta
                                                         ee_ori_now_quat);
     }
     else{
-        target_ee_translation = initial_ee_translation + (Eigen::Vector3d(ee_goal_pose_transform.translation()) - initial_ee_translation);
+
+        target_ee_translation = initial_ee_translation + 0.5 * (Eigen::Vector3d(ee_goal_pose_transform.translation()) - initial_ee_translation);
+        target_ee_translation[1] *= -1.0;//mirroring about X axis
+        // target_ee_translation = Eigen::Vector3d(ee_goal_pose_transform.translation());
         // Eigen::Vector4d ee_ori_goal_vec = ee_goal_pose.tail(4);
         target_ee_ori_quat = Eigen::Quaterniond(ee_goal_pose_transform.linear());
         target_ee_ori_quat.normalize();

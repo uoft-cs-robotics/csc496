@@ -109,7 +109,7 @@ int main(int argc, char** argv) {
       Eigen::Vector3d desired_position(pose(0,3), pose(1,3), pose(2,3)) ;
       double dist = distance(current_position, desired_position);
 
-      if (time >= 8.0 || (output_eigen_velocities.norm() < 0.002 && dist < 0.001) ) {
+      if (time >= 15.0 || (output_eigen_velocities.norm() < 0.0005 && dist < 0.0005) ) {
         output_velocities = {0.0, 0.0 ,0.0, 0.0, 0.0, 0.0, 0.0}; 
         return franka::MotionFinished(output_velocities);
       }

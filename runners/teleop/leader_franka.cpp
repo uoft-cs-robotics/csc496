@@ -11,8 +11,7 @@
 namespace robotContext
 {
     franka::Model *model;
-    franka::Robot *robot;  
-    bool is_started_receiving = false;     
+    franka::Robot *robot;      
 }
 
 
@@ -32,18 +31,17 @@ franka::Torques control_loop_joint_position_coupling( franka::RobotState _fstate
     std::array<double, 7> follower_joint_positions = {0, 0, 0, 0, 0, 0, 0};
     std::array<double, 7> calculated_torque = {0, 0, 0, 0, 0, 0, 0};  
 
-    std::vector<double> Kp = {120.0, 120.0, 120.0, 120.0, 20.0, 20.0, 4.0};
-    std::vector<double> Kd = {7.5, 7.5, 7.5, 7.5, 2.25, 2.25, 0.75}; 
+    // std::vector<double> Kp = {120.0, 120.0, 120.0, 120.0, 20.0, 20.0, 4.0};
+    // std::vector<double> Kd = {7.5, 7.5, 7.5, 7.5, 2.25, 2.25, 0.75}; 
 
-    // std::vector<double> Kp = {30, 30, 30, 30, 15, 15, 15};
-    // std::vector<double> Kd = {0.5, 0.5, 0.5, 0.5, 0.25, 0.25, 0.25}; 
+    std::vector<double> Kp = {30, 30, 30, 30, 15, 15, 15};
+    std::vector<double> Kd = {0.5, 0.5, 0.5, 0.5, 0.25, 0.25, 0.25}; 
 
     if (!is_state){
         follower_joint_positions = _lstate.q_d;
     }
     else{
         follower_joint_positions = _fstate.q;
-        robotContext::is_started_receiving = true;
     }
 
     for (int i = 0; i < _lstate.q.size(); i++)
@@ -58,10 +56,7 @@ franka::Torques control_loop_joint_position_coupling( franka::RobotState _fstate
                                 calculated_torque[2], calculated_torque[3] ,
                                 calculated_torque[4] , calculated_torque[5],
                                 calculated_torque[6] }};
-    if(robotContext::is_started_receiving && !is_state)
-        return MotionFinished(output_torque);
-    else
-        return output_torque;
+    return output_torque;
 }
 
 franka::Torques control_loop_joint_torque_coupling( franka::RobotState _fstate, franka::RobotState _lstate, franka::Duration _period, bool is_state)
@@ -75,22 +70,12 @@ franka::Torques control_loop_joint_torque_coupling( franka::RobotState _fstate, 
     }
     else{
 
-        robotContext::is_started_receiving = true;
-        // std::array<double, 7> follower_gravity_tau = {0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0}; 
+
         std::array<double, 7> follower_gravity_tau = (*robotContext::model).gravity(_fstate);
-
-        // try{
-        // }
-        // catch (franka::Exception const& e) 
-        // {
-        //     std::cout << e.what() << std::endl;
-        // }
-
         std::array<double, 7> follower_measured_tau = _fstate.tau_J;
         for (int i = 0; i < 7; i++)
         {
             calculated_torque[i] = -1.0 * K_tau_scaling[i] * (follower_measured_tau[i] - follower_gravity_tau[i]);
-            // std::cout<<calculated_torque[i]<<", "<<K_tau_scaling[i]<<", "<<follower_measured_tau[i]<<", "<<follower_gravity_tau[i]<<"\n";
         }        
     }
     franka::Torques output_torque{{calculated_torque[0], calculated_torque[1],
@@ -98,10 +83,8 @@ franka::Torques control_loop_joint_torque_coupling( franka::RobotState _fstate, 
                                 calculated_torque[4] , calculated_torque[5],
                                 calculated_torque[6] }};
     
-    if(robotContext::is_started_receiving && !is_state)
-        return MotionFinished(output_torque);
-    else
-        return output_torque;   
+
+    return output_torque;   
 }
 
 bool read_loop( franka::RobotState _fstate, franka::RobotState _lstate, franka::Duration _period, bool is_state)
@@ -118,9 +101,9 @@ bool read_loop( franka::RobotState _fstate, franka::RobotState _lstate, franka::
 
 int main(int argc, char** argv) 
 {
-    if (argc != 4)
+    if (argc != 5)
     {
-        std::cerr << "Usage: "  << argv[0] << "  <server-port>  <server-pc-host> <leader-robot-hostname> \n";
+        std::cerr << "Usage: "  << argv[0] << "  <server-port>  <server-pc-host> <leader-robot-hostname> <teleop mode 1. no feedback from follower 2. position feedback from follower 3. ext torque feedback from follower>\n";
         return 1;
     }
 
@@ -141,13 +124,24 @@ int main(int argc, char** argv)
         << "Please make sure to have the user stop button at hand!" << std::endl
         << "Press Enter to continue..." << std::endl;
     std::cin.ignore();
-    
-    // leader.Read(read_loop);
+    switch (atoi(argv[4]))
+    {
+    case 1:
+        leader.Control( control_loop_no_feedback);
+        break;
+    case 2:
+        leader.Control(control_loop_joint_position_coupling);
+        break; 
+    case 3: 
+        leader.Control(control_loop_joint_torque_coupling);
+        break; 
+    default:
+        std::cout<<"teleop option not supported";
+        break;
+    }
 
-    leader.Control( control_loop_no_feedback);
-    leader.Control(control_loop_joint_position_coupling);
-    // leader.Control(control_loop_joint_torque_coupling);
 
     std::cout << "Done" << std::endl;
+    leader.~Leader();
     return 0;
 }

@@ -43,6 +43,7 @@ set(RUNNERS
     medcvr_point_collection    
     gravity_compensation
     impedance
+    # nullspace_controller
 )
 
 foreach(runner ${RUNNERS})
@@ -114,7 +115,12 @@ target_link_libraries( run_leader_franka
 )
 
 
-
+add_executable(run_nullspace_control ${CMAKE_CURRENT_LIST_DIR}/runners/nullspace_control.cpp)
+target_link_libraries( run_nullspace_control
+  PUBLIC
+  Franka::Franka
+  ${Franka_LIBRARIES}
+)
 # # custom library
 # add_library(examples_common STATIC
 #   src/examples/examples_common.cpp

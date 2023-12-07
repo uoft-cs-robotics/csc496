@@ -12,8 +12,8 @@
 namespace teleop
 {
 
-
-int i = 0; 
+bool is_started_receiving = false; 
+int lost_packets = 0; 
 Leader::Leader(char* server_port, char* server_ip, char* leader_ip)
     : client(io_service, server_port, server_ip)
     //   teleop::robot(leader_ip)
@@ -25,7 +25,7 @@ Leader::Leader(char* server_port, char* server_ip, char* leader_ip)
 
 Leader::~Leader()
 {
-
+    client.~NetworkClient(); 
 }
 
 
@@ -64,7 +64,7 @@ void Leader::Control( std::function<franka::Torques(
     const double print_rate = 100.0;
     std::atomic_bool running{true};
     std::string file_name = "/home/lueder/Desktop/log_leader.txt";
-    std::thread print_thread = std::thread(logger::log_data, std::cref(print_rate), std::ref(logger::print_data), std::ref(running), std::ref(file_name));
+    // std::thread print_thread = std::thread(logger::log_data, std::cref(print_rate), std::ref(logger::print_data), std::ref(running), std::ref(file_name));
     robotContext::robot->control(
         [this, &custom_control_loop]( const franka::RobotState& robot_state, franka::Duration period )
         -> franka::Torques
@@ -75,30 +75,30 @@ void Leader::Control( std::function<franka::Torques(
             _master_state = robot_state;
             _slave_state = client._slave_state;
             is_state_received = client.is_state_received;
-            if (logger::print_data.mutex.try_lock()) {
-                logger::print_data.has_data = is_state_received;
-                logger::print_data.robot_state = robot_state;
-                logger::print_data.mutex.unlock();
-            }               
-            // if (teleop::i % 100 ==0) {
-            //     std::cout<<"Recevied :"<< is_state_received<<"\n";
-            // }
-            // call user callback
-            // franka::Torques _torques = custom_control_loop(_slave_state, _master_state, period, is_state_received);
+            // if (logger::print_data.mutex.try_lock()) {
+            //     logger::print_data.has_data = is_state_received;
+            //     logger::print_data.robot_state = robot_state;
+            //     logger::print_data.mutex.unlock();
+            // }         
+            if (!is_started_receiving) {
+                if(is_state_received)
+                    is_started_receiving = true; 
+            } 
+            else {
+                if (!is_state_received)
+                    ++lost_packets;
+                else    
+                    lost_packets = 0;  
+            }      
             franka::Torques _torques = custom_control_loop(_slave_state, _master_state, period, is_state_received);
-            // franka::Torques zero_torques = control_loop_no_feedback(_slave_state, _master_state, period, is_state_received);
+            client.is_state_received = false;
+            if(is_started_receiving && lost_packets > 20) 
+                return MotionFinished( _torques);
             return _torques;
         }
     );
-    if (print_thread.joinable()) {
-    print_thread.join();
-    }      
-
+    return ;    
 }
-
-
-
-
 
 void Leader::Read( std::function<bool( 
     const franka::RobotState& _fstate,  const franka::RobotState& _lstate, 

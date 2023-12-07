@@ -140,6 +140,12 @@ int main(int argc, char** argv)
         break;
     }
 
+<<<<<<< HEAD
+=======
+    // leader.Control( control_loop_no_feedback);
+    // leader.Control(control_loop_joint_position_coupling);
+    leader.Control(control_loop_joint_torque_coupling);
+>>>>>>> bf3c1f08dd912e42c1bdaec2570d47b66f795f17
 
     std::cout << "Done" << std::endl;
     leader.~Leader();

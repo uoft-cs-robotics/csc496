@@ -57,6 +57,12 @@ endforeach()
 add_library(franka_common STATIC
   src/common.cpp
 )
+
+add_library(ik STATIC
+  src/ik.cpp
+)
+
+
 target_link_libraries(franka_common PUBLIC  ${Franka_LIBRARIES} )
 
 # custom library (network client) 
@@ -75,7 +81,7 @@ target_link_libraries(network_server PUBLIC  ${Franka_LIBRARIES} ${Boost_LIBRARI
 add_library(follower STATIC
   src/teleop/follower.cpp
 )
-target_link_libraries(follower PUBLIC  ${Franka_LIBRARIES} ${Boost_LIBRARIES} franka_common)
+target_link_libraries(follower PUBLIC  ${Franka_LIBRARIES} ${Boost_LIBRARIES} franka_common ik)
 
 # custom library (teleop leader) 
 add_library(leader STATIC

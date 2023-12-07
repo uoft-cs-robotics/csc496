@@ -14,25 +14,22 @@ namespace robotContext
     franka::Model *model;
     franka::Robot *robot;  
     franka::RobotState initial_state;
+    InverseKinematics *ik;
+
 }
 
 
-// franka::JointVelocities ik_control_loop( franka::RobotState _fstate, franka::RobotState _lstate, franka::Duration _period, bool is_state)
-// {
-//     // you can control state in this loop (if is_state is true) 
-//     std::array<double, 7> current_position = {0, 0, 0, 0, 0, 0, 0};
-//     std::array<double, 7> calculated_torque = {0, 0, 0, 0, 0, 0, 0};
-//     if ( !is_state )
-//     {
-//         current_position = _fstate.q_d;
-//     }
-//     else
-//     {
-//         current_position = _lstate.q;
-//     }
+franka::JointVelocities ik_control_loop( franka::RobotState _fstate, franka::RobotState _lstate, franka::Duration _period, bool is_state)
+{
+    franka::JointVelocities output_velocities = (*robotContext::ik)(_fstate,
+                                                                    _lstate,
+                                                                    robotContext::initial_state,
+                                                                    _period,
+                                                                    is_state);
+    return output_velocities;
 
 
-// }
+}
 
 
 franka::Torques control_loop( franka::RobotState _fstate, franka::RobotState _lstate, franka::Duration _period, bool is_state)
@@ -87,6 +84,9 @@ int main(int argc, char** argv)
         return 1;
     }
 
+    InverseKinematics ik_controller(1, IKType::M_P_PSEUDO_INVERSE);
+    robotContext::ik = &ik_controller;
+
     franka::Robot robot_(argv[2]);
     robotContext::robot = &robot_; 
     franka::Model model_ = robotContext::robot->loadModel();
@@ -106,7 +106,10 @@ int main(int argc, char** argv)
     std::cin.ignore();
     
     // follower.Read(read_loop);
-    follower.Control(control_loop);
+
+    // follower.Control(control_loop);
+
+    follower.ScaledMotionControl(ik_control_loop);
 
     std::cout << "Done" << std::endl;
     return 0;

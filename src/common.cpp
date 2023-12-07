@@ -110,3 +110,7 @@ franka::JointPositions MotionGenerator::operator()(const franka::RobotState& rob
   output.motion_finished = motion_finished;
   return output;
 }
+
+// void MotionGenerator::set_q_goal(const Eigen::Matrix<double, 7, 1, Eigen::ColMajor> &q_goal){
+//   q_goal_ = q_goal; 
+// }

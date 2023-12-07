@@ -78,9 +78,9 @@ bool read_loop( franka::RobotState _fstate, franka::RobotState _lstate, franka::
 
 int main(int argc, char** argv) 
 {
-    if (argc != 3)
+    if (argc != 4)
     {
-        std::cerr << "Usage: "  << argv[0] << "  <server-port>  <follower-robot-hostname> \n";
+        std::cerr << "Usage: "  << argv[0] << "  <server-port>  <follower-robot-hostname> <teleop mode 1. no motino scaliing 2. scaled motion in follower > \n";
         return 1;
     }
 
@@ -105,11 +105,22 @@ int main(int argc, char** argv)
         << "Press Enter to continue..." << std::endl;
     std::cin.ignore();
     
-    // follower.Read(read_loop);
+    switch(atoi(argv[3])){
+        case 1: 
+            follower.Control(control_loop);
+            break; 
+        case 2:
+            follower.ScaledMotionControl(ik_control_loop);
+            break;
+        default: 
+            std::cout<<"Option not found\n";
+            break;
+    }
 
-    // follower.Control(control_loop);
 
-    follower.ScaledMotionControl(ik_control_loop);
+
+
+    
 
     std::cout << "Done" << std::endl;
     return 0;

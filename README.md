@@ -1,6 +1,7 @@
 # Build
 
 ```bash
+cd ~/<path_to_this_repo>
 mkdir build
 cd build
 cmake ..

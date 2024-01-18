@@ -8,6 +8,60 @@ cmake ..
 make
 ```
 
+# Turning on Franka Robot
+
+1. Pull "red" colored power switch.
+2. Wait for status LED to turn solid yellow.
+3. Open chrome browser and type 192.168.1.107 to access Franka Desk.
+4. Unlock the joints by clicking unlock icon.
+5. Go to the hamburger menu and click Active FCI. Let it remain active.
+
+# Turning off Franka Robot
+
+1. Open Franka Desk.
+2. Deactivate FCI.
+3. Go to the hamburger menu and select shutdown robot.
+4. Once Franka Desk says it is okay to power off, then press the red power switch.
+
+# Starting Docker 
+
+Every micro PC computer in the lab has a desktop folder called **CSC496**. In that folder there are four scripts.
+
+``` bash
+# Builds docker containers (already done for you)
+./build_docker_container.sh 
+
+# Starts the docker containers (run once to get started)
+./start_docker_container.sh 
+
+# Run in every terminal in host machine where you want to access container's terminal
+./open_docker_terminal.sh
+
+# Run to close the container once you are done with all your work
+./stop_docker_containers.sh
+```
+
+# Running Libfranka Examples
+
+Once you have started the docker container and are in the docker terminal, you can access the libfranka source code and compiled files in the following folders:
+
+``` bash
+# Source code can be found in the examples folder.
+/root/git/scratchpad/libfranka/examples
+
+# Build directory contains examples folder where all the compiled examples are ready to run
+/root/git/scratchpad/libfranka/build/examples
+```
+
+If you make any changes in the libfranka cpp files, you will then need to build the files again.
+
+Note that in order to run any of the examples, you need to include the ip address of the Franka:
+
+``` bash
+# Example
+./communication_test 192.168.1.107
+```
+
 # Run Teleop
 
 Make sure two franka controller pcs are connected via ethernet cable directly, and set the static ip

@@ -1,0 +1,21 @@
+version: "2.2"
+services:
+  docker_csc496:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: docker_csc496
+    tty: true
+    cap_add:
+      - SYS_NICE
+    ulimits:
+      rtprio: 99
+      rttime: -1
+      memlock: 8428281856
+    privileged: true      
+    network_mode: host
+    devices:
+    - /dev:/dev    
+    volumes:  
+      - ../scratchpad:/root/git/scratchpad
+

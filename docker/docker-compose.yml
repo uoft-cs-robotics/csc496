@@ -1,10 +1,10 @@
 version: "2.2"
 services:
-  slicerros_csc496_franka:
+  slicerros_csc379_franka:
     build:
-      context: ..
-      dockerfile: Dockerfile
-    container_name: slicerros_csc496_franka
+      context: .
+      dockerfile: Dockerfile_csc379_franka
+    container_name: slicerros_csc379_franka
     tty: true
     cap_add:
       - SYS_NICE
@@ -17,5 +17,4 @@ services:
     devices:
     - /dev:/dev    
     volumes:  
-      - ../scratchpad:/root/git/scratchpad
-
+      - ../scratchpad:/home/csc379/scratchpad:rw

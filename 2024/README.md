@@ -25,7 +25,7 @@ make
 
 # Starting Docker 
 
-Every micro PC computer in the lab has a desktop folder called **CSC496**. In that folder there are four scripts.
+Every micro PC computer in the lab has a desktop folder called **csc379**. In that folder there are four scripts.
 
 ``` bash
 # Builds docker containers (already done for you)

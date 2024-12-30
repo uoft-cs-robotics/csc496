@@ -1,5 +1,5 @@
 
-# CSC496 Meta Repo for Assignments and Practicals
+# csc379 Meta Repo for Assignments and Practicals
 
 I did something great here.
 

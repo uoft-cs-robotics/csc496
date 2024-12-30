@@ -23,21 +23,21 @@ RUN apt-get update && apt-get install -y gedit
 
 # user
 RUN apt-get update && apt-get install -y sudo
-RUN useradd -m -s /bin/bash csc496
-RUN echo 'csc496:csc496' | chpasswd
-RUN usermod -aG sudo csc496
+RUN useradd -m -s /bin/bash csc379
+RUN echo 'csc379:csc379' | chpasswd
+RUN usermod -aG sudo csc379
 
 # 3D slicer deps
 RUN apt update && apt install -y git build-essential cmake cmake-curses-gui cmake-qt-gui libqt5x11extras5-dev qtmultimedia5-dev libqt5svg5-dev qtwebengine5-dev libqt5xmlpatterns5-dev qttools5-dev qtbase5-private-dev qtbase5-dev qt5-qmake
-USER csc496
+USER csc379
 
 # 3D slicer
-RUN mkdir /home/csc496/slicer
-WORKDIR /home/csc496/slicer
+RUN mkdir /home/csc379/slicer
+WORKDIR /home/csc379/slicer
 RUN git clone https://github.com/Slicer/Slicer.git
 RUN cd Slicer && git checkout v5.6.2
 RUN mkdir Slicer-SuperBuild-Debug
-WORKDIR /home/csc496/slicer/Slicer-SuperBuild-Debug
+WORKDIR /home/csc379/slicer/Slicer-SuperBuild-Debug
 RUN cmake -DSlicer_USE_SYSTEM_OpenSSL=ON -DSlicer_BUILD_TESTING=OFF -DSlicer_DOWNLOAD_TEST_DATA=OFF -DSlicer_USE_TESTING_DATA=OFF -DBUILD_TESTING=OFF ../Slicer && make -j14
 
 # use bash
@@ -46,31 +46,24 @@ SHELL ["/bin/bash", "-c"]
 # slicer ros2
 USER root
 RUN apt-get update && apt-get install -y python3-colcon-common-extensions ros-humble-ament-cmake ros-humble-joint-state-publisher ros-humble-xacro
-USER csc496
-WORKDIR /home/csc496
-RUN mkdir -p /home/csc496/ros2_ws/src
-RUN cd /home/csc496/ros2_ws/src && git clone https://github.com/rosmed/slicer_ros2_module
-WORKDIR /home/csc496/ros2_ws
-RUN source /opt/ros/humble/setup.bash && colcon build --cmake-args -DSlicer_DIR:PATH=/home/csc496/slicer/Slicer-SuperBuild-Debug/Slicer-build -DCMAKE_BUILD_TYPE=Release
-
-# franka_bringup && franka_description
-WORKDIR /home/csc496/ros2_ws/src
-RUN git clone https://mcsgitlab.utm.utoronto.ca/iseoluwa/franka_bringup.git
-RUN git clone https://mcsgitlab.utm.utoronto.ca/iseoluwa/franka_description.git
-WORKDIR /home/csc496/ros2_ws
-RUN source /opt/ros/humble/setup.bash && colcon build
+USER csc379
+WORKDIR /home/csc379
+RUN mkdir -p /home/csc379/ros2_ws/src
+RUN cd /home/csc379/ros2_ws/src && git clone https://github.com/rosmed/slicer_ros2_module
+WORKDIR /home/csc379/ros2_ws
+RUN source /opt/ros/humble/setup.bash && colcon build --cmake-args -DSlicer_DIR:PATH=/home/csc379/slicer/Slicer-SuperBuild-Debug/Slicer-build -DCMAKE_BUILD_TYPE=Release
 
 # aliases
 RUN echo 'alias ll="ls -la"' >> ~/.bashrc
-RUN echo 'alias s_ros="source /opt/ros/humble/setup.bash && source /home/csc496/ros2_ws/install/setup.bash"' >> ~/.bashrc
-RUN echo 'alias slicer="s_ros && /home/csc496/slicer/Slicer-SuperBuild-Debug/Slicer-build/Slicer"' >> ~/.bashrc
+RUN echo 'alias s_ros="source /opt/ros/humble/setup.bash && source /home/csc379/ros2_ws/install/setup.bash"' >> ~/.bashrc
+RUN echo 'alias slicer="s_ros && /home/csc379/slicer/Slicer-SuperBuild-Debug/Slicer-build/Slicer"' >> ~/.bashrc
 
 # terminal
 USER root
 RUN apt-get update && apt-get install -y tilix
 
-USER csc496
-WORKDIR /home/csc496
+USER csc379
+WORKDIR /home/csc379
 
 ENV DISPLAY=:0
 ENTRYPOINT ["/bin/bash"]

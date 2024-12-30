@@ -1,9 +1,9 @@
 version: "2.2"
 services:
-  slicerros_csc496_franka:
+  slicerros_csc379_franka:
     extends:
       file: docker-compose.yml
-      service: slicerros_csc496_franka
+      service: slicerros_csc379_franka
     environment:
      - DISPLAY=${DISPLAY}
      - QT_X11_NO_MITSHM=1

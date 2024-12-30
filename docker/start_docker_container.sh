@@ -1,1 +1,1 @@
-docker-compose -f docker/docker-compose-gui.yml start
+docker-compose -f docker-compose-gui.yml start

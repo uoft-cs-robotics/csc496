@@ -9,7 +9,7 @@ ENV LANG=en_US.UTF-8
 ENV LANGUAGE=en_US:en
 ENV LC_ALL=en_US.UTF-8
 
-# ros
+# ROS2
 RUN apt-get update && apt-get install software-properties-common -y
 RUN add-apt-repository universe
 RUN apt-get update && apt-get install curl -y
@@ -72,6 +72,5 @@ RUN apt-get update && apt-get install -y tilix
 USER csc496
 WORKDIR /home/csc496
 
-# docker run -it -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=$DISPLAY <image_name>
 ENV DISPLAY=:0
 ENTRYPOINT ["/bin/bash"]

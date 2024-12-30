@@ -7,7 +7,7 @@ docker build -f Dockerfile_csc496 . -t slicerros_csc496 --no-cache
 # Later this should seperate ros and slicer
 
 # build franka libs
-docker build -f Dockerfile_csc496.franka . -t slicerros_csc496_franka --no-cache
+docker build -f Dockerfile_csc496_franka . -t slicerros_csc496_franka --no-cache
 ```
 
 # Run

@@ -39,7 +39,6 @@ USER root
 WORKDIR /home/csc496/libfranka/build
 RUN dpkg -i libfranka*.deb
 
-
 # Peter Corkes Robotics toolbox
 RUN apt-get update && apt-get install -y python3-pip
 RUN pip3 install roboticstoolbox-python 

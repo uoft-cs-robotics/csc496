@@ -1,0 +1,17 @@
+---
+BasedOnStyle:  LLVM
+AlignAfterOpenBracket: AlwaysBreak
+AlignEscapedNewlines: Left
+AllowShortFunctionsOnASingleLine: InlineOnly
+AlwaysBreakTemplateDeclarations: Yes
+BinPackArguments: false
+BinPackParameters: false
+BreakBeforeBraces: Allman
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+IncludeBlocks:   Preserve
+IndentCaseLabels: true
+NamespaceIndentation: None
+PointerAlignment: Left
+SortIncludes: false
+IndentWidth: 4
+...

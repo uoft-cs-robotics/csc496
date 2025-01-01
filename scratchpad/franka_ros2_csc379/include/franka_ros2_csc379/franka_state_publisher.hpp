@@ -2,6 +2,8 @@
 
 #include <memory>
 
+#include <franka/robot.h>
+
 #include "rclcpp/rclcpp.hpp"
 #include "sensor_msgs/msg/joint_state.hpp"
 
@@ -17,9 +19,12 @@ class FrankaStatePublisher
   private:
     void publishState();
 
-    std::shared_ptr<rclcpp::Node> nodeHandle;
+    std::shared_ptr<rclcpp::Node> node_handle_;
     std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::JointState>>
-        JSPublisher_;
+        js_publisher_;
+
+    // Franka
+    std::shared_ptr<franka::Robot> robot_;
 
     // Add more objects when needed
 };

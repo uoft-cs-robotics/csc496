@@ -15,12 +15,11 @@ class MinimalPublisher : public rclcpp::Node
     MinimalPublisher() : Node("minimal_publisher"), count_(0)
     {
         publisher_ = this->create_publisher<std_msgs::msg::String>("topic", 10);
-        timer_ = this->create_wall_timer(
-            500ms, std::bind(&MinimalPublisher::timer_callback, this));
+        // timer_ = this->create_wall_timer(
+        //     500ms, std::bind(&MinimalPublisher::timer_callback, this));
     }
 
-  private:
-    void timer_callback()
+    void publish_hello()
     {
         auto message = std_msgs::msg::String();
         message.data = "Hello, world! " + std::to_string(count_++);
@@ -28,6 +27,8 @@ class MinimalPublisher : public rclcpp::Node
             this->get_logger(), "Publishing: '%s'", message.data.c_str());
         publisher_->publish(message);
     }
+
+  private:
     rclcpp::TimerBase::SharedPtr timer_;
     rclcpp::Publisher<std_msgs::msg::String>::SharedPtr publisher_;
     size_t count_;
@@ -36,7 +37,14 @@ class MinimalPublisher : public rclcpp::Node
 int main(int argc, char* argv[])
 {
     rclcpp::init(argc, argv);
-    rclcpp::spin(std::make_shared<MinimalPublisher>());
+    auto node = std::make_shared<MinimalPublisher>();
+    auto spin_thread = std::thread([&]() { rclcpp::spin(node); });
+    while (rclcpp::ok())
+    {
+        node->publish_hello();
+        std::this_thread::sleep_for(10ms);
+    }
     rclcpp::shutdown();
+    spin_thread.join();
     return 0;
 }

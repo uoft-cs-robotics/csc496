@@ -6,6 +6,11 @@ if(NOT CMAKE_CXX_STANDARD)
   set(CMAKE_CXX_STANDARD 14)
 endif()
 
+find_package(Franka 0.9.0 QUIET)
+if(NOT Franka_FOUND)
+  find_package(Franka 0.8.0 REQUIRED)
+endif()
+
 if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
   add_compile_options(-Wall -Wextra -Wpedantic)
 endif()
@@ -17,17 +22,22 @@ find_package(sensor_msgs REQUIRED)
 
 # include_directories(include)
 
-add_executable(talker src/publisher.cpp)
+add_executable(talker src/talker.cpp)
 ament_target_dependencies(talker rclcpp std_msgs)
 
 add_executable(franka_state_publisher src/franka_state_publisher.cpp)
-target_include_directories(franka_state_publisher PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include)
-ament_target_dependencies(franka_state_publisher rclcpp sensor_msgs)
+target_include_directories(franka_state_publisher PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include ${Franka_INCLUDE_DIRS})
+ament_target_dependencies(franka_state_publisher rclcpp sensor_msgs Franka)
+
+add_executable(franka_impedance_control src/franka_impedance_control.cpp)
+target_include_directories(franka_impedance_control PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include ${Franka_INCLUDE_DIRS})
+ament_target_dependencies(franka_impedance_control rclcpp sensor_msgs Franka)
 
 
 install(TARGETS
   talker
   franka_state_publisher
+  franka_impedance_control
   DESTINATION lib/${PROJECT_NAME})
 
 ament_package()

@@ -7,22 +7,22 @@ namespace csc379
 FrankaStatePublisher::FrankaStatePublisher(
     std::shared_ptr<rclcpp::Node> node_handle)
 {
-    nodeHandle = node_handle;
-    // Create necessary Franka objects, follow any libfranka example
+    node_handle_ = node_handle;
+    // Task: Create necessary Franka objects, follow any libfranka example
 
-    // Create a publisher
+    // Task: Create a publisher
 }
 
 void FrankaStatePublisher::ReadStateAndPublish()
 {
-    // Read Franka State, do not use franka::control method
+    // Task: Read Franka State, do not use franka::control method
 
     this->publishState();
 }
 
 void FrankaStatePublisher::publishState()
 {
-    // Create sensor_msgs JointState and Publish
+    // Task: Create sensor_msgs JointState and Publish
 }
 
 } // namespace csc379
@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
     while (rclcpp::ok())
     {
         franka_state_publisher.ReadStateAndPublish();
-        // Add rate of publishing
+        // Task: Add rate of publishing
     }
 
     rclcpp::shutdown();

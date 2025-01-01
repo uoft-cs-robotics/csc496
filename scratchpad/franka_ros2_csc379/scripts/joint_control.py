@@ -7,11 +7,9 @@ from std_msgs.msg import String
 
 # Taken from ros docs minimal publisher
 
-class JointStatePublisher(Node):
-
-    def __init__(self):
-        super().__init__('minimal_publisher')
-        self.publisher_ = self.create_publisher(
+class JointStatePublisher():
+    def __init__(self, node_handle):
+        self.publisher_ = node_handle.create_publisher(
             String, # Task: Use the correct topic type
             'topic',  # Task: Use the correct topic name
             10)
@@ -23,11 +21,11 @@ class JointStatePublisher(Node):
 def main(args=None):
     rclpy.init(args=args)
 
-    joint_state_publisher = JointStatePublisher()
-
-    spin_func = lambda _ : rclpy.spin(joint_state_publisher)
-    thread = threading.Thread(target=spin_func, args=(0,))
-    thread.start()
+    node_handle = Node('minimal_publisher')
+    joint_state_publisher = JointStatePublisher(node_handle)
+    spin_func = lambda _ : rclpy.spin(node_handle)
+    spin_thread = threading.Thread(target=spin_func, args=(0,))
+    spin_thread.start()
 
     # Task: Get the current joint state as in problem set 1
 
@@ -51,7 +49,7 @@ def main(args=None):
 
     joint_state_publisher.destroy_node()
     rclpy.shutdown()
-    thread.join()
+    spin_thread.join()
 
 if __name__ == '__main__':
     main()

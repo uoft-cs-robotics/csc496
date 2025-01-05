@@ -1,16 +1,16 @@
-
 # csc379 Meta Repo for Assignments and Practicals
 
-I did something great here.
 
-# Docker
+# Setup (TA's only)
 
-lll
+Cloning the Repo:
+```bash
+git clone https://github.com/uoft-cs-robotics/csc496.git
+cd csc496
+git checkout feature/winter2025
+git submodule update --init --recursive
+```
 
-# Build
+Follow instructions to build docker files: 
+[docker/csc379_README.md](docker/csc379_README.md).
 
-fff
-
-# Usage
-
-fff

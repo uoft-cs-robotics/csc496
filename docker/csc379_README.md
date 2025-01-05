@@ -41,8 +41,3 @@ To load the docker image on the computer:
 ```bash
 $ docker load < docker-slicerros_csc379_franka.tar.gz
 ```
-
-# for myself, radian
-```bash
-docker run -it -v /tmp/.X11-unix:/tmp/.X11-unix -v /home/radian/csc496:/home/csc496:rw -e DISPLAY=$DISPLAY osrf/ros:humble-desktop 
-```

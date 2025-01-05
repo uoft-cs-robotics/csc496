@@ -1,0 +1,3 @@
+[submodule "scratchpad/libfranka"]
+	path = scratchpad/libfranka
+	url = https://github.com/frankaemika/libfranka

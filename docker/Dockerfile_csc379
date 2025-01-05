@@ -39,7 +39,7 @@ RUN cd Slicer && git checkout v5.6.2
 RUN mkdir Slicer-SuperBuild-Debug
 WORKDIR /home/csc379/slicer/Slicer-SuperBuild-Debug
 RUN cmake -DSlicer_USE_SYSTEM_OpenSSL=ON -DSlicer_BUILD_TESTING=OFF -DSlicer_DOWNLOAD_TEST_DATA=OFF \
-    -DSlicer_USE_TESTING_DATA=OFF -DBUILD_TESTING=OFF ../Slicer && make -j8
+    -DSlicer_USE_TESTING_DATA=OFF -DBUILD_TESTING=OFF -DVTK_PYTHON_FULL_THREADSAFE=ON ../Slicer && make -j14
 
 # use bash
 SHELL ["/bin/bash", "-c"]

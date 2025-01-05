@@ -39,7 +39,7 @@ int main(int argc, char* argv[])
     while (rclcpp::ok())
     {
         franka_state_publisher.ReadStateAndPublish();
-        // Task: Add frequency of publishing
+        // Task: Add rate of publishing
     }
 
     rclcpp::shutdown();

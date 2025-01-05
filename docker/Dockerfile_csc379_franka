@@ -36,6 +36,9 @@ USER root
 WORKDIR /home/csc379/libfranka/build
 RUN dpkg -i libfranka*.deb
 
+# tmux
+RUN apt install tmux
+
 # Peter Corkes Robotics toolbox
 RUN apt-get update && apt-get install -y python3-pip
 

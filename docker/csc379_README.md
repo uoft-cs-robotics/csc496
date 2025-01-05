@@ -1,8 +1,12 @@
 # Docker
 
+# Install 
+
 Use docker-compose standalone, not docker desktop
 
-# Build
+# Build (TA's only)
+
+These should already be built for you. check with `docker images`
 
 ```bash
 # build slicer and ros2
@@ -10,18 +14,23 @@ docker build -f Dockerfile_csc379 . -t slicerros_csc379 --no-cache
 # Later this should seperate ros and slicer
 
 # build the rest of packages: libfranka, franka_descriptions, robotics_toolbox
+# image name:docker-slicerros_csc379_franka
 ./build_docker_container.sh
 ```
 
 # Run
 
 ```bash
-./start_docker_container.sh # starts the docker container on the system
-./open_docker_container.sh # Get into the terminal
+# starts the docker container docker-slicerros_csc379_franka on the system
+./start_docker_container.sh 
+
+# Get into the terminal
+./open_docker_container.sh
+
 ./stop_docker_container.sh
 ```
 
-# Deploy
+# Deploy (TA's only)
 
 To save the docker image to a file:
 ```bash

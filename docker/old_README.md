@@ -22,7 +22,7 @@ slicer
 
 #### Note
 
-The first time you run Slicer, you need to add the SlicerROS2 module directory (~ros2_ws/build/ROS2/lib/Slicer-5.6/qt-loadable-modules)
+The first time you run Slicer, you need to add the SlicerROS2 module directory (~/ros2_ws/build/slicer_ros2_module/lib/Slicer-5.6/qt-loadable-modules)
 in the Application Settings (Edit > Application Settings > Modules > Additional module paths > Add). Then restart Slicer.
 
 ### In another terminal, launch the franka_bringup node:

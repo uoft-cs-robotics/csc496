@@ -25,19 +25,29 @@ find_package(sensor_msgs REQUIRED)
 add_executable(talker src/talker.cpp)
 ament_target_dependencies(talker rclcpp std_msgs)
 
-add_executable(franka_state_publisher src/franka_state_publisher.cpp)
-target_include_directories(franka_state_publisher PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include ${Franka_INCLUDE_DIRS})
-ament_target_dependencies(franka_state_publisher rclcpp sensor_msgs Franka)
+add_executable(franka_state_publisher_ros2 src/franka_state_publisher_ros2.cpp)
+target_include_directories(franka_state_publisher_ros2 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include ${Franka_INCLUDE_DIRS})
+ament_target_dependencies(franka_state_publisher_ros2 rclcpp sensor_msgs Franka)
 
-add_executable(franka_impedance_control src/franka_impedance_control.cpp)
-target_include_directories(franka_impedance_control PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include ${Franka_INCLUDE_DIRS})
-ament_target_dependencies(franka_impedance_control rclcpp sensor_msgs Franka)
 
+add_executable(run_franka_impedance_control 
+    src/run_franka_impedance_control.cpp
+    src/franka_impedance_control.cpp)
+target_include_directories(run_franka_impedance_control PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include ${Franka_INCLUDE_DIRS})
+ament_target_dependencies(run_franka_impedance_control rclcpp Franka) # why is rclcpp needed here?
+
+add_executable(run_franka_impedance_control_ros2 
+    src/run_franka_impedance_control_ros2.cpp
+    src/franka_impedance_control_ros2.cpp
+    src/franka_impedance_control.cpp)
+target_include_directories(run_franka_impedance_control_ros2 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include ${Franka_INCLUDE_DIRS})
+ament_target_dependencies(run_franka_impedance_control_ros2 rclcpp sensor_msgs Franka)
 
 install(TARGETS
   talker
-  franka_state_publisher
-  franka_impedance_control
+  franka_state_publisher_ros2
+  run_franka_impedance_control
+  run_franka_impedance_control_ros2
   DESTINATION lib/${PROJECT_NAME})
 
 ament_package()

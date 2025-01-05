@@ -10,6 +10,7 @@ namespace csc379
 FrankaImpedanceControlROS2::FrankaImpedanceControlROS2(
     std::shared_ptr<rclcpp::Node> node_handle)
 {
+    // This should be correct from your previous task
     fic_ = std::make_unique<FrankaImpedanceControl>();
 
     node_handle_ = node_handle;
@@ -17,18 +18,13 @@ FrankaImpedanceControlROS2::FrankaImpedanceControlROS2(
     // Task: Create a publisher
 
     auto timer_callback = [&, this]() {
-        std::vector<double> current_joint_positions;
-        {
-            std::lock_guard<std::mutex> lock(this->current_state_mtx_);
-            current_joint_positions = current_joint_positions_;
-        }
+        // Task: Get current joint positions from fic and publish
         this->publishState(); // Modify accordingly
     };
     timer_ = node_handle_->create_wall_timer(
         std::chrono::milliseconds(10), timer_callback);
 
     // Task: Create a subscriber with setJointPosition as the callback
-
 }
 
 void FrankaImpedanceControlROS2::publishState()
@@ -39,13 +35,13 @@ void FrankaImpedanceControlROS2::publishState()
 void FrankaImpedanceControlROS2::setJointPositions(
     const sensor_msgs::msg::JointState& js_msg)
 {
-    // Task: Create a subscriber to set the joint positions,
+    // Task: Create a subscriber and set the joint positions,
 }
 
-void FrankaImpedanceControlROS2::join()
+void FrankaImpedanceControlROS2::Join()
 {
-    fic_->join();
+    fic_->Join();
+    return;
 }
 
 } // namespace csc379
-

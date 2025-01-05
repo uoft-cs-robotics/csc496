@@ -1,6 +1,7 @@
 #include <chrono>
 #include <functional>
 #include <cstdlib>
+#include <cassert>
 
 #include "franka_ros2_csc379/franka_impedance_control.hpp"
 
@@ -27,11 +28,20 @@ FrankaImpedanceControl::FrankaImpedanceControl()
     robot_->setJointImpedance({{3000, 3000, 3000, 2500, 2500, 2000, 2000}});
     robot_->setCartesianImpedance({{3000, 3000, 3000, 300, 300, 300}});
     model_ = std::make_shared<franka::Model>(robot_->loadModel());
-    robot_->control(std::bind(
-        &FrankaImpedanceControl::impedanceControlCallback,
-        this,
-        std::placeholders::_1,
-        std::placeholders::_2));
+
+    auto robot_control_func = [this]() {
+        this->robot_->control(std::bind(
+            &FrankaImpedanceControl::impedanceControlCallback,
+            this,
+            std::placeholders::_1,
+            std::placeholders::_2));
+    };
+    control_thread_ = std::thread(robot_control_func);
+}
+
+void FrankaImpedanceControl::Join()
+{
+    control_thread_.join();
 }
 
 std::vector<double> FrankaImpedanceControl::GetCurrentJointPositions()
@@ -70,7 +80,8 @@ franka::Torques FrankaImpedanceControl::impedanceControlCallback(
             {
                 throw std::runtime_error(
                     "Desired joint [" + std::to_string(i) +
-                    "] position is larger than tolerance: " + std::to_string(tol));
+                    "] position is larger than tolerance: " +
+                    std::to_string(tol));
             }
         }
         // ----------------------------------------------- //

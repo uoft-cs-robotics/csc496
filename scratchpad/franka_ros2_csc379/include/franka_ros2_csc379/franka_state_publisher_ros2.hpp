@@ -10,10 +10,10 @@
 namespace csc379
 {
 
-class FrankaStatePublisher
+class FrankaStatePublisherROS2
 {
   public:
-    FrankaStatePublisher(std::shared_ptr<rclcpp::Node> node_handle);
+    FrankaStatePublisherROS2(std::shared_ptr<rclcpp::Node> node_handle);
     void ReadStateAndPublish();
 
   private:

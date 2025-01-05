@@ -7,9 +7,10 @@ int main(int argc, char* argv[])
     auto node_handle =
         std::make_shared<rclcpp::Node>("franka_impedence_control");
     auto spin_thread = std::thread([&]() { rclcpp::spin(node_handle); });
-    auto franka_impedence_control_ros2 = csc379::FrankaImpedanceControlROS2(node_handle);
+    auto franka_impedence_control_ros2 =
+        csc379::FrankaImpedanceControlROS2(node_handle);
     rclcpp::shutdown();
-    franka_impedence_control_ros2.join();
+    franka_impedence_control_ros2.Join();
     spin_thread.join();
     return 0;
 }

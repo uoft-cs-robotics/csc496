@@ -14,11 +14,12 @@ class FrankaImpedanceControlROS2
 {
   public:
     FrankaImpedanceControlROS2(std::shared_ptr<rclcpp::Node> node_handle);
-    void join();
+    void Join();
+
   private:
     // Franka
     std::unique_ptr<FrankaImpedanceControl> fic_;
-  
+
     // ROS
     std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::JointState>>
         js_publisher_;

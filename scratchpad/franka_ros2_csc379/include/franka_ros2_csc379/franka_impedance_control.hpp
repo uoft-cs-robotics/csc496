@@ -2,14 +2,13 @@
 
 #include <array>
 #include <memory>
+#include <mutex>
+#include <thread>
 #include <vector>
 
 #include <franka/model.h>
 #include <franka/rate_limiting.h>
 #include <franka/robot.h>
-
-#include "rclcpp/rclcpp.hpp"
-#include "sensor_msgs/msg/joint_state.hpp"
 
 namespace csc379
 {
@@ -18,6 +17,7 @@ class FrankaImpedanceControl
 {
   public:
     FrankaImpedanceControl();
+    void Join();
 
   private:
     // Franka
@@ -27,6 +27,7 @@ class FrankaImpedanceControl
     std::array<double, 7> d_gains_;
     franka::Torques impedanceControlCallback(
         const franka::RobotState& state, franka::Duration /*period*/);
+    std::thread control_thread_;
 
     std::mutex current_state_mtx_;
     std::vector<double> current_joint_positions_;
@@ -34,8 +35,7 @@ class FrankaImpedanceControl
 
     std::mutex joint_positions_mtx_;
     std::vector<double> command_joint_positions_;
-    void FrankaImpedanceControl::SetCommandJointPositions(
-        const std::vector<double>& joint_positions);
+    void SetCommandJointPositions(const std::vector<double>& joint_positions);
     // Add more objects when needed
 };
 

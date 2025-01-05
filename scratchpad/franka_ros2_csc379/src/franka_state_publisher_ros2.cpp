@@ -1,10 +1,10 @@
 #include <memory>
-#include "franka_ros2_csc379/franka_state_publisher.hpp"
+#include "franka_ros2_csc379/franka_state_publisher_ros2.hpp"
 
 namespace csc379
 {
 
-FrankaStatePublisher::FrankaStatePublisher(
+FrankaStatePublisherROS2::FrankaStatePublisherROS2(
     std::shared_ptr<rclcpp::Node> node_handle)
 {
     node_handle_ = node_handle;
@@ -13,14 +13,14 @@ FrankaStatePublisher::FrankaStatePublisher(
     // Task: Create a publisher
 }
 
-void FrankaStatePublisher::ReadStateAndPublish()
+void FrankaStatePublisherROS2::ReadStateAndPublish()
 {
     // Task: Read Franka State, do not use franka::control method
 
     this->publishState();
 }
 
-void FrankaStatePublisher::publishState()
+void FrankaStatePublisherROS2::publishState()
 {
     // Task: Create sensor_msgs JointState and Publish
 }
@@ -32,8 +32,8 @@ int main(int argc, char* argv[])
     rclcpp::init(argc, argv);
     std::shared_ptr<rclcpp::Node> node_handle =
         std::make_shared<rclcpp::Node>("franka_state_publisher");
-    csc379::FrankaStatePublisher franka_state_publisher =
-        csc379::FrankaStatePublisher(node_handle);
+    csc379::FrankaStatePublisherROS2 franka_state_publisher =
+        csc379::FrankaStatePublisherROS2(node_handle);
     auto spin_thread = std::thread([&]() { rclcpp::spin(node_handle); });
 
     while (rclcpp::ok())

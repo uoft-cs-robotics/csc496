@@ -5,7 +5,7 @@ from std_msgs.msg import String
 
 # Taken from ros docs minimal subscriber
 
-class JointStateSubcriber():
+class FrankaStateSubscriber():
     def __init__(self, node_handle):
         self.subscription = node_handle.create_subscription(
             String, # Task: Change to the correct topic type
@@ -23,7 +23,7 @@ class JointStateSubcriber():
 def main(args=None):
     rclpy.init(args=args)
     node_handle = Node('joint_state_subscriber')
-    joint_state_subscriber = JointStateSubcriber(node_handle)
+    joint_state_subscriber = FrankaStateSubscriber(node_handle)
     rclpy.spin(node_handle)
     joint_state_subscriber.destroy_node()
     rclpy.shutdown()

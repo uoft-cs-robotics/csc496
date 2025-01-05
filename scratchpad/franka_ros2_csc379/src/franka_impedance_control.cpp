@@ -7,25 +7,10 @@
 namespace csc379
 {
 
-FrankaImpedanceControl::FrankaImpedanceControl(
-    std::shared_ptr<rclcpp::Node> node_handle)
+FrankaImpedanceControl::FrankaImpedanceControl()
 {
-    node_handle_ = node_handle;
-
-    // Task: Create a publisher
-
-    auto timer_callback = [&, this]() {
-        std::vector<double> current_joint_positions;
-        {
-            std::lock_guard<std::mutex> lock(this->current_state_mtx_);
-            current_joint_positions = current_joint_positions_;
-        }
-        this->publishState(); // Modify accordingly
-    };
-    timer_ = node_handle_->create_wall_timer(
-        std::chrono::milliseconds(10), timer_callback);
-
-    // Task: Create a subscriber with setJointPosition as the callback
+    // Task: Create the robot object with correct ip address
+    // Task: Set the command_joint_positions_ as the current state of the robot
 
     // Start robot control
     k_gains_ = {{600.0, 600.0, 600.0, 600.0, 250.0, 150.0, 50.0}};
@@ -49,15 +34,16 @@ FrankaImpedanceControl::FrankaImpedanceControl(
         std::placeholders::_2));
 }
 
-void FrankaImpedanceControl::publishState()
+std::vector<double> FrankaImpedanceControl::GetCurrentJointPositions()
 {
-    // Task: Copy from your franka_state_publisher
+    // Task: Get the current joint positions of the franka and return
+    return {};
 }
 
-void FrankaImpedanceControl::setJointPositions(
-    const sensor_msgs::msg::JointState& js_msg)
+void FrankaImpedanceControl::SetCommandJointPositions(
+    const std::vector<double>& joint_positions)
 {
-    // Task: Create a subscriber to set the joint positions,
+    // Task: Set command joint positions from the argument joint positions
     // Remember to lock the mutex for thread safety, as this
     // function runs on a different thread than imepdanceControlCallback
 }
@@ -67,7 +53,7 @@ franka::Torques FrankaImpedanceControl::impedanceControlCallback(
 {
     {
         std::lock_guard<std::mutex> lock(this->current_state_mtx_);
-        // Task: read the current joint positions here
+        // Task: read and set the current joint positions here
     }
 
     std::array<double, 7> coriolis = model_->coriolis(state);
@@ -106,15 +92,3 @@ franka::Torques FrankaImpedanceControl::impedanceControlCallback(
 }
 
 } // namespace csc379
-
-int main(int argc, char* argv[])
-{
-    rclcpp::init(argc, argv);
-    auto node_handle =
-        std::make_shared<rclcpp::Node>("franka_impedence_control");
-    auto spin_thread = std::thread([&]() { rclcpp::spin(node_handle); });
-    auto franka_impedence_control = csc379::FrankaImpedanceControl(node_handle);
-    rclcpp::shutdown();
-    spin_thread.join();
-    return 0;
-}

@@ -25,6 +25,9 @@ find_package(sensor_msgs REQUIRED)
 add_executable(talker src/talker.cpp)
 ament_target_dependencies(talker rclcpp std_msgs)
 
+add_executable(subscriber src/subscriber.cpp)
+ament_target_dependencies(subscriber rclcpp std_msgs)
+
 add_executable(franka_state_publisher_ros2 src/franka_state_publisher_ros2.cpp)
 target_include_directories(franka_state_publisher_ros2 PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/include ${Franka_INCLUDE_DIRS})
 ament_target_dependencies(franka_state_publisher_ros2 rclcpp sensor_msgs Franka)
@@ -45,6 +48,7 @@ ament_target_dependencies(run_franka_impedance_control_ros2 rclcpp sensor_msgs F
 
 install(TARGETS
   talker
+  subscriber
   franka_state_publisher_ros2
   run_franka_impedance_control
   run_franka_impedance_control_ros2

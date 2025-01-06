@@ -2,6 +2,19 @@ FROM slicerros_csc379 as system
 
 ENV DEBIAN_FRONTEND=noninteractive
 
+# for slicer ros2
+USER root
+RUN apt-get update && apt-get install -y python3-colcon-common-extensions ros-humble-ament-cmake ros-humble-joint-state-publisher ros-humble-xacro
+# USER csc379
+# WORKDIR /home/csc379
+# RUN mkdir -p /home/csc379/ros2_ws/src
+# RUN cd /home/csc379/ros2_ws/src && git clone https://github.com/rosmed/slicer_ros2_module
+# WORKDIR /home/csc379/ros2_ws
+# RUN source /opt/ros/humble/setup.bash && colcon build --cmake-args -DSlicer_DIR:PATH=/home/csc379/slicer/Slicer-SuperBuild-Debug/Slicer-build -DCMAKE_BUILD_TYPE=Release
+
+# aliases
+# RUN echo 'alias s_ros="source /opt/ros/humble/setup.bash && source /home/csc379/ros2_ws/install/setup.bash"' >> ~/.bashrc
+
 # franka_bringup && franka_description, might want from scratchpad instead
 USER csc379
 WORKDIR /home/csc379/ros2_ws/src

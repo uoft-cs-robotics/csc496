@@ -11,9 +11,8 @@ These should already be built for you. check with `docker images`
 ```bash
 # build slicer and ros2
 docker build -f Dockerfile_csc379 . -t slicerros_csc379 --no-cache
-# Later this should seperate ros and slicer
 
-# build the rest of packages: libfranka, franka_descriptions, robotics_toolbox
+# build the rest of packages: libfranka, franka_descriptions, robotics_toolbox, slicer_ros2_modules
 # image name:docker-slicerros_csc379_franka
 ./build_docker_container.sh
 ```

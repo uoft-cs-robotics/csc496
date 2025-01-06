@@ -1,3 +1,6 @@
 [submodule "scratchpad/libfranka"]
 	path = scratchpad/libfranka
 	url = https://github.com/frankaemika/libfranka
+[submodule "scratchpad/slicer_ros2_module"]
+	path = scratchpad/slicer_ros2_module
+	url = https://github.com/rosmed/slicer_ros2_module

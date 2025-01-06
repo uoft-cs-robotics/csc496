@@ -33,10 +33,21 @@ docker build -f Dockerfile_csc379 . -t slicerros_csc379 --no-cache
 
 To save the docker image to a file:
 ```bash
-$ docker save docker-slicerros_csc379_franka | gzip > docker-slicerros_csc379_franka.tar.gz
+docker save -o docker-slicerros_csc379_franka.tar docker-slicerros_csc379_franka
+
 ```
 
 To load the docker image on the computer:
 ```bash
-$ docker load < docker-slicerros_csc379_franka.tar.gz
+docker load -i docker-slicerros_csc379_franka.tar
+```
+
+To save the docker image to a file:
+```bash
+docker save -o slicerros_csc379.tar slicerros_csc379
+```
+
+To load the docker image on the computer:
+```bash
+docker load -i docker-slicerros_csc379.tar
 ```

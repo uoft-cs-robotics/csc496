@@ -14,6 +14,7 @@ RUN apt-get update && apt-get install -y python3-colcon-common-extensions ros-hu
 
 # aliases
 # RUN echo 'alias s_ros="source /opt/ros/humble/setup.bash && source /home/csc379/ros2_ws/install/setup.bash"' >> ~/.bashrc
+RUN echo 'alias slicer="/home/csc379/slicer/Slicer-SuperBuild-Debug/Slicer-build/Slicer"' >> ~/.bashrc
 
 # franka_bringup && franka_description, might want from scratchpad instead
 # USER csc379

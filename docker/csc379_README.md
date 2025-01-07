@@ -49,5 +49,5 @@ docker save -o slicerros_csc379.tar slicerros_csc379
 
 To load the docker image on the computer:
 ```bash
-docker load -i docker-slicerros_csc379.tar
+docker load -i slicerros_csc379.tar
 ```

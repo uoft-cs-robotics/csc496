@@ -16,12 +16,12 @@ RUN apt-get update && apt-get install -y python3-colcon-common-extensions ros-hu
 # RUN echo 'alias s_ros="source /opt/ros/humble/setup.bash && source /home/csc379/ros2_ws/install/setup.bash"' >> ~/.bashrc
 
 # franka_bringup && franka_description, might want from scratchpad instead
-USER csc379
-WORKDIR /home/csc379/ros2_ws/src
-RUN git clone https://mcsgitlab.utm.utoronto.ca/iseoluwa/franka_bringup.git
-RUN git clone https://mcsgitlab.utm.utoronto.ca/iseoluwa/franka_description.git
-WORKDIR /home/csc379/ros2_ws
-RUN source /opt/ros/humble/setup.bash && colcon build
+# USER csc379
+# WORKDIR /home/csc379/ros2_ws/src
+# RUN git clone https://mcsgitlab.utm.utoronto.ca/iseoluwa/franka_bringup.git
+# RUN git clone https://mcsgitlab.utm.utoronto.ca/iseoluwa/franka_description.git
+# WORKDIR /home/csc379/ros2_ws
+# RUN source /opt/ros/humble/setup.bash && colcon build
 
 # libfranka install
 ## From https://github.com/frankaemika/libfranka/blob/main/README.md

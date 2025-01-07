@@ -53,15 +53,15 @@ RUN apt install tmux
 # Peter Corkes Robotics toolbox
 RUN apt-get update && apt-get install -y python3-pip
 
+# aliases
+SHELL ["/bin/bash", "-c"]
+# RUN echo 'alias s_ros="source /opt/ros/humble/setup.bash && source /home/csc379/ros2_ws/install/setup.bash"' >> ~/.bashrc
+RUN echo 'alias slicer="/home/csc379/slicer/Slicer-SuperBuild-Debug/Slicer-build/Slicer"' >> /root/.bashrc
+
 ## pip as non root and also for setup the container entry
 USER csc379
 WORKDIR /home/csc379
 RUN pip3 install roboticstoolbox-python 
-
-# aliases
-SHELL ["/bin/bash", "-c"]
-# RUN echo 'alias s_ros="source /opt/ros/humble/setup.bash && source /home/csc379/ros2_ws/install/setup.bash"' >> ~/.bashrc
-RUN echo 'alias slicer="/home/csc379/slicer/Slicer-SuperBuild-Debug/Slicer-build/Slicer"' >> ~/.bashrc
 
 ENV DISPLAY=:0
 ENTRYPOINT ["/bin/bash"]

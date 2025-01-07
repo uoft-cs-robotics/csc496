@@ -15,6 +15,7 @@ services:
     privileged: true      
     network_mode: host
     devices:
-    - /dev:/dev    
+    - /dev:/dev
+    user: root
     volumes:  
       - ../scratchpad:/home/csc379/scratchpad:rw

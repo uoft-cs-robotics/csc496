@@ -53,7 +53,6 @@ RUN apt install tmux
 # Peter Corkes Robotics toolbox
 RUN apt-get update && apt-get install -y python3-pip
 
-
 ## pip as non root and also for setup the container entry
 USER csc379
 WORKDIR /home/csc379

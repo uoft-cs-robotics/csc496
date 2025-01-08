@@ -16,6 +16,8 @@ class FrankaImpedanceControl
   public:
     FrankaImpedanceControl();
     void Join();
+    std::array<double, 7> GetCurrentJointPositions();
+    void SetCommandJointPositions(const std::array<double, 7>& joint_positions);
   private:
     // Franka
     std::shared_ptr<franka::Model> model_;
@@ -28,11 +30,9 @@ class FrankaImpedanceControl
 
     std::mutex current_state_mtx_;
     std::array<double, 7> current_joint_positions_;
-    std::array<double, 7> GetCurrentJointPositions();
 
     std::mutex joint_positions_mtx_;
     std::array<double, 7> command_joint_positions_;
-    void SetCommandJointPositions(const std::array<double, 7>& joint_positions);
     // Add more objects when needed
 };
 

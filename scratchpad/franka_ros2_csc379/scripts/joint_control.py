@@ -41,7 +41,7 @@ def main(args=None):
         # Task: Print your trajectory first before uncommenting
         # the publisher
 
-        joint_state_publisher.publish_joints([0, 0, 0, 0, 0, 0, 0])
+        joint_state_publisher.publish_joints(command_joint_positions)
         # Task: Important to set your sleep! 
         # This is how fast you are sending the points,
         # which sets the velocity

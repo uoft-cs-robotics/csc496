@@ -15,7 +15,7 @@ FrankaStatePublisherROS2::FrankaStatePublisherROS2(
 
 void FrankaStatePublisherROS2::ReadStateAndPublish()
 {
-    // Task: Read Franka State, do not use franka::control method
+    // Task: Read Franka State Once, do not use franka::control method
 
     this->publishState();
 }

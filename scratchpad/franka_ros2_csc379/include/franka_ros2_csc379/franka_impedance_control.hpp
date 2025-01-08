@@ -4,10 +4,8 @@
 #include <memory>
 #include <mutex>
 #include <thread>
-#include <vector>
 
 #include <franka/model.h>
-#include <franka/rate_limiting.h>
 #include <franka/robot.h>
 
 namespace csc379
@@ -18,7 +16,6 @@ class FrankaImpedanceControl
   public:
     FrankaImpedanceControl();
     void Join();
-
   private:
     // Franka
     std::shared_ptr<franka::Model> model_;
@@ -30,12 +27,12 @@ class FrankaImpedanceControl
     std::thread control_thread_;
 
     std::mutex current_state_mtx_;
-    std::vector<double> current_joint_positions_;
-    std::vector<double> GetCurrentJointPositions();
+    std::array<double, 7> current_joint_positions_;
+    std::array<double, 7> GetCurrentJointPositions();
 
     std::mutex joint_positions_mtx_;
-    std::vector<double> command_joint_positions_;
-    void SetCommandJointPositions(const std::vector<double>& joint_positions);
+    std::array<double, 7> command_joint_positions_;
+    void SetCommandJointPositions(const std::array<double, 7>& joint_positions);
     // Add more objects when needed
 };
 

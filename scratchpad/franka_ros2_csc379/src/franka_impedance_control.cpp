@@ -3,6 +3,8 @@
 #include <cstdlib>
 #include <cassert>
 
+#include <franka/rate_limiting.h>
+
 #include "franka_ros2_csc379/franka_impedance_control.hpp"
 
 namespace csc379
@@ -44,14 +46,14 @@ void FrankaImpedanceControl::Join()
     control_thread_.join();
 }
 
-std::vector<double> FrankaImpedanceControl::GetCurrentJointPositions()
+std::array<double, 7> FrankaImpedanceControl::GetCurrentJointPositions()
 {
     // Task: Get the current joint positions of the franka and return
     return {};
 }
 
 void FrankaImpedanceControl::SetCommandJointPositions(
-    const std::vector<double>& joint_positions)
+    const std::array<double, 7>& joint_positions)
 {
     // Task: Set command joint positions from the argument joint positions
     // Remember to lock the mutex for thread safety, as this

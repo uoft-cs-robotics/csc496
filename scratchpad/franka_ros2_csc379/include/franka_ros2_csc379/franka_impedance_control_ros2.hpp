@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <thread>
 
 #include "franka_impedance_control.hpp"
 
@@ -23,7 +24,7 @@ class FrankaImpedanceControlROS2
     // ROS
     std::shared_ptr<rclcpp::Publisher<sensor_msgs::msg::JointState>>
         js_publisher_;
-    rclcpp::TimerBase::SharedPtr timer_;
+    std::thread publisher_thread_;
     void publishState();
 
     std::shared_ptr<rclcpp::Node> node_handle_;

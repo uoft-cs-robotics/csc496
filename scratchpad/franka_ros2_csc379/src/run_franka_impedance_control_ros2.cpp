@@ -9,8 +9,8 @@ int main(int argc, char* argv[])
     auto spin_thread = std::thread([&]() { rclcpp::spin(node_handle); });
     auto franka_impedence_control_ros2 =
         csc379::FrankaImpedanceControlROS2(node_handle);
+    spin_thread.join();
     rclcpp::shutdown();
     franka_impedence_control_ros2.Join();
-    spin_thread.join();
     return 0;
 }

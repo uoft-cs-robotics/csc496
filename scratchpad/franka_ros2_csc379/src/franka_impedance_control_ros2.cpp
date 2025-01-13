@@ -17,12 +17,16 @@ FrankaImpedanceControlROS2::FrankaImpedanceControlROS2(
 
     // Task: Create a publisher
 
-    auto timer_callback = [&, this]() {
+    auto publish_func = [&, this]() {
         // Task: Get current joint positions from fic and publish
-        this->publishState(); // Modify accordingly
+        while (rclcpp::ok())
+        {
+            this->publishState(); // Modify accordingly
+            std::this_thread::sleep_for(std::chrono::milliseconds(10)); // 10 Hz
+        }
     };
-    timer_ = node_handle_->create_wall_timer(
-        std::chrono::milliseconds(10), timer_callback);
+    publisher_thread_ = std::thread(publish_func);
+
 
     // Task: Create a subscriber with setJointPosition as the callback
 }
@@ -41,6 +45,7 @@ void FrankaImpedanceControlROS2::setJointPositions(
 void FrankaImpedanceControlROS2::Join()
 {
     fic_->Join();
+    publisher_thread_.join();
     return;
 }
 

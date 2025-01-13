@@ -36,7 +36,8 @@ def main(args=None):
     spin_func = lambda _ : rclpy.spin(node_handle)
     spin_thread = threading.Thread(target=spin_func, args=(0,))
     spin_thread.start()
-
+    time.sleep(1) # sleep to allow spin thread to get some messages
+    
     # Task: Get the current joint state as in problem set 1
 
     # Task: Create a joint trajectory with a desired goal joint state

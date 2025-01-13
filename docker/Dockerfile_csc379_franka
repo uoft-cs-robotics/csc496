@@ -58,10 +58,12 @@ SHELL ["/bin/bash", "-c"]
 # RUN echo 'alias s_ros="source /opt/ros/humble/setup.bash && source /home/csc379/ros2_ws/install/setup.bash"' >> ~/.bashrc
 RUN echo 'alias slicer="/home/csc379/slicer/Slicer-SuperBuild-Debug/Slicer-build/Slicer"' >> /root/.bashrc
 
-## pip as non root and also for setup the container entry
+# pip as root robotics tool
+RUN pip3 install roboticstoolbox-python 
+
+# Login
 USER csc379
 WORKDIR /home/csc379
-RUN pip3 install roboticstoolbox-python 
 
 ENV DISPLAY=:0
 ENTRYPOINT ["/bin/bash"]

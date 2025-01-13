@@ -1,5 +1,6 @@
 import threading
 import rclpy
+import time
 from rclpy.node import Node
 
 import roboticstoolbox as rtb
@@ -11,7 +12,8 @@ def main(args=None):
     spin_func = lambda _ : rclpy.spin(node_handle)
     spin_thread = threading.Thread(target=spin_func, args=(0,))
     spin_thread.start()
-    
+    time.sleep(1) # sleep to allow spin thread to get some messages
+
     # Task: Use the read joint states and joint control interfaces from
     # problem set 1 and 2
     

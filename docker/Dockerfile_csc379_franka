@@ -58,8 +58,9 @@ SHELL ["/bin/bash", "-c"]
 # RUN echo 'alias s_ros="source /opt/ros/humble/setup.bash && source /home/csc379/ros2_ws/install/setup.bash"' >> ~/.bashrc
 RUN echo 'alias slicer="/home/csc379/slicer/Slicer-SuperBuild-Debug/Slicer-build/Slicer"' >> /root/.bashrc
 
-# pip as root robotics tool
+# pip as root
 RUN pip3 install roboticstoolbox-python 
+RUN pip3 install pygame
 
 # Login
 USER csc379

@@ -28,8 +28,8 @@ def main(args=None):
 
     # Task: Solve for least squares to get the Transform from Franka flange to tool tip
 
-    rclpy.shutdown()
     spin_thread.join()
+    rclpy.shutdown()
 
 if __name__ == '__main__':
     main()

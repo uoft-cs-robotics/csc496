@@ -5,6 +5,7 @@ from pydicom.dataset import Dataset, FileDataset
 from pydicom.uid import generate_uid, ExplicitVRLittleEndian
 import os
 from stl import mesh
+import sys
 
 def convert_stl_to_volume(numpy_stl_mesh, resolution=100, voxel_size=None, parallel=False):
     """Convert STL to voxel volume using stltovoxel"""
@@ -80,9 +81,11 @@ def stl_to_dicom(stl_path, output_dir, resolution=100, voxel_size=1.0):
 
 if __name__ == "__main__":
     # Change paths
+    stl_path = sys.argv[1]
+    output_dir = sys.argv[2]
     stl_to_dicom(
-        stl_path="/Users/nirmalpol/PycharmProjects/csc496/scratchpad/stl2dicom/mixel-motor-holders.STL",
-        output_dir="/Users/nirmalpol/PycharmProjects/csc496/scratchpad/stl2dicom/dicom_output",
+        stl_path=stl_path,
+        output_dir=output_dir,
         resolution=200,  # Voxel grid resolution
         voxel_size=0.5   # Physical size per voxel in mm
     )

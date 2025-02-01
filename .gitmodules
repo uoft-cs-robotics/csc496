@@ -7,3 +7,7 @@
 [submodule "franka_description"]
 	path = scratchpad/slicer_ros2_ws/franka_description
 	url = https://mcsgitlab.utm.utoronto.ca/iseoluwa/franka_description.git
+[submodule "scratchpad/slicer_ros2_ws/slicer_ros2_module"]
+	path = scratchpad/slicer_ros2_ws/slicer_ros2_module
+	url = https://mcsgitlab.utm.utoronto.ca/medcvr/slicer_ros2_module.git
+	branch = feature/csc379

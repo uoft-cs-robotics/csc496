@@ -1,12 +1,12 @@
-[submodule "scratchpad/libfranka"]
+[submodule "libfranka"]
 	path = scratchpad/libfranka
 	url = https://github.com/frankaemika/libfranka
-[submodule "scratchpad/slicer_ros2_module"]
-	path = scratchpad/ros2_ws/slicer_ros2_module
+[submodule "slicer_ros2_module"]
+	path = scratchpad/slicer_ros2_ws/slicer_ros2_module
 	url = https://github.com/rosmed/slicer_ros2_module
-[submodule "scratchpad/ros2_ws/franka_bringup"]
-	path = scratchpad/ros2_ws/franka_bringup
+[submodule "franka_bringup"]
+	path = scratchpad/slicer_ros2_ws/franka_bringup
 	url = https://mcsgitlab.utm.utoronto.ca/iseoluwa/franka_bringup.git
-[submodule "scratchpad/ros2_ws/franka_description"]
-	path = scratchpad/ros2_ws/franka_description
+[submodule "franka_description"]
+	path = scratchpad/slicer_ros2_ws/franka_description
 	url = https://mcsgitlab.utm.utoronto.ca/iseoluwa/franka_description.git

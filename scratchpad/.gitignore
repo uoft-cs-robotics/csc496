@@ -2,5 +2,4 @@
 **/log
 **/build
 /test
-**.dcm
 **.sql

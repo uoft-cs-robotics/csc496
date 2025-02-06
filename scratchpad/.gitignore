@@ -3,3 +3,4 @@
 **/build
 /test
 **.sql
+/data_slicer/

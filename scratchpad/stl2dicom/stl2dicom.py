@@ -72,6 +72,8 @@ def stl_to_dicom(stl_path, output_dir, resolution=100, voxel_size=1.0):
         voxel_size=voxel_size
     )
     
+    voxel_volume = np.flip(voxel_volume, axis=2) # Lego data set is flipped
+
     # Convert to DICOM
     voxel_to_dicom(
         voxel_volume,
@@ -87,5 +89,5 @@ if __name__ == "__main__":
         stl_path=stl_path,
         output_dir=output_dir,
         resolution=200,  # Voxel grid resolution
-        voxel_size=0.5   # Physical size per voxel in mm
+        voxel_size=0.5,   # Physical size per voxel in mm
     )

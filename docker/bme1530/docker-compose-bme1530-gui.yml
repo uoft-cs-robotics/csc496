@@ -1,0 +1,12 @@
+version: "2.2"
+services:
+  bme1530:
+    extends:
+      file: docker-compose-bme1530.yml
+      service: bme1530
+    environment:
+     - DISPLAY=${DISPLAY}
+     - QT_X11_NO_MITSHM=1
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+      - /tmp/.docker.xauth:/tmp/.docker.xauth:rw

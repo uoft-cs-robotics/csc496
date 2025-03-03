@@ -1,0 +1,1 @@
+docker-compose -f docker-compose-bme1530-gui.yml start

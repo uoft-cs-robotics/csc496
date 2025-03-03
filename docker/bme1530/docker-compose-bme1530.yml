@@ -1,0 +1,20 @@
+version: "2.2"
+services:
+  bme1530:
+    build:
+      context: .
+      dockerfile: Dockerfile_bme1530
+    container_name: bme1530
+    tty: true
+    cap_add:
+      - SYS_NICE
+    ulimits:
+      rtprio: 99
+      rttime: -1
+      memlock: 8428281856
+    privileged: true      
+    network_mode: host
+    devices:
+    - /dev:/dev
+    volumes:  
+      - ../../scratchpad:/home/scratchpad:rw

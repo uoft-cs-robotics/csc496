@@ -1,6 +1,28 @@
-FROM ros:humble-desktop
+FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND=noninteractive
+
+# set the locale
+RUN apt-get update && apt-get install -y locales
+RUN locale-gen en_US.UTF-8
+ENV LANG=en_US.UTF-8
+ENV LANGUAGE=en_US:en
+ENV LC_ALL=en_US.UTF-8
+
+# ROS2
+RUN apt-get update && apt-get install software-properties-common -y
+RUN add-apt-repository universe
+RUN apt-get update && apt-get install curl -y
+RUN curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key -o /usr/share/keyrings/ros-archive-keyring.gpg
+RUN echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(. /etc/os-release && echo $UBUNTU_CODENAME) main" | tee /etc/apt/sources.list.d/ros2.list > /dev/null
+RUN apt-get update && apt-get upgrade -y
+RUN apt-get install ros-humble-desktop -y
+
+# gedit
+RUN apt-get update && apt-get install -y gedit
+
+# terminal
+RUN apt-get update && apt-get install -y tilix
 
 # for ROS2 dependencies
 RUN apt-get update && apt-get install -y python3-colcon-common-extensions ros-humble-ament-cmake ros-humble-joint-state-publisher ros-humble-xacro
@@ -28,7 +50,8 @@ RUN dpkg -i libfranka*.deb
 # Development tools
 RUN apt install -y tmux python3-pip
 
-# Python libraries
+# Peter Corkes Robotics toolbox
+RUN apt-get update && apt-get install -y python3-pip
 RUN pip3 install roboticstoolbox-python pygame numpy==1.26.4
 
 WORKDIR /home

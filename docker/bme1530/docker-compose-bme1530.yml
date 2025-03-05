@@ -16,5 +16,7 @@ services:
     network_mode: host
     devices:
     - /dev:/dev
+    - /dev/bus/usb:/dev/bus/usb
+    - /dev/ttyUSB0:/dev/ttyUSB0
     volumes:  
       - ../../scratchpad:/home/scratchpad:rw

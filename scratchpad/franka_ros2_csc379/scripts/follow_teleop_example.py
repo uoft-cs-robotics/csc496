@@ -1,10 +1,16 @@
 import numpy as np
 import time
+from scipy.spatial.transform import Rotation as R
 
 def get_rot_and_p(tf):
     rot = tf[0:3, 0:3]
     p = tf[0:3, 3]
     return rot, p.flatten('F')
+
+def get_scaled_rotation(rotation, scale):
+    t = scale  # Interpolation parameter (from 0 to 1)
+    scaled_quat = R.slerp([0, 1], [R.identity(), R.from_matrix(rotation)])(t)
+    return scaled_quat.as_matrix()
 
 class TeleopController():
     def __init__(self):
@@ -38,7 +44,9 @@ class TeleopController():
 # matches the tip transform change of the input device
 class CartesianFollowTeleopController(TeleopController):
     def __init__(self, kinematics_solver,
-                 position_scale = 1.0):
+                 position_scale = 1.0,
+                 rotation_scale = 1.0):
+        super().__init__()
         self.kinematics_solver = kinematics_solver
 
         # State variables
@@ -46,10 +54,9 @@ class CartesianFollowTeleopController(TeleopController):
         self.current_output_js = np.array([])
         self.start_input_tf = np.identity(4)
         self.start_output_tf = np.identity(4)
+
         self.position_scale = position_scale
-        self.is_registered = False
-        self.is_clutched = False
-        self.is_enabled = False
+        self.rotation_scale = rotation_scale
 
     # start_input_tf: np.array 4x4 matrix of the current transform of the input device
     # start_output_js: np.array n joints of the current joint position of the output device/robot
@@ -109,8 +116,9 @@ class CartesianFollowTeleopController(TeleopController):
         output_diff_p_wrt_s = input_diff_p
         output_p_wrt_s = cur_output_p + output_diff_p_wrt_s
 
+        input_diff_rot_scaled = get_scaled_rotation(input_diff_rot, self.rotation_scale)
         # Post multiply output to rotate about itself
-        output_rot = np.matmul(cur_output_rot, input_diff_rot)
+        output_rot = np.matmul(cur_output_rot, input_diff_rot_scaled)
 
         output_tf = np.copy(current_output_tf)
         output_tf[0:3, 0:3] = output_rot
@@ -121,7 +129,6 @@ def interpolate_joint_path(start_jp, goal_jp, increment):
     joint_path = np.arange(start_jp, goal_jp, increment)
     joint_path = np.append(joint_path, goal_jp)
     return joint_path
-
 
 # This is for your Gripper if the joint state needs to match an input device joint state
 class JointFollowTeleopController(TeleopController):

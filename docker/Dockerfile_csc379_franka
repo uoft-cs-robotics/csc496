@@ -5,6 +5,10 @@ ENV DEBIAN_FRONTEND=noninteractive
 # for slicer ros2
 USER root
 RUN apt-get update && apt-get install -y python3-colcon-common-extensions ros-humble-ament-cmake ros-humble-joint-state-publisher ros-humble-xacro
+
+# Extra ROS2 missing for franka_gripper
+RUN apt-get install -y ros-humble-control-msgs ament-cmake-clang-format
+
 # USER csc379
 # WORKDIR /home/csc379
 # RUN mkdir -p /home/csc379/ros2_ws/src

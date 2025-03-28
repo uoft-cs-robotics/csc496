@@ -1,9 +1,9 @@
-# franka_ros2_csc379
+# franka_ws/franka_ros2_csc379
 
 # Build
 
 ```bash
-cd franka_ros2_csc379
+cd franka_ws
 source /opt/ros/humble/setup.bash
 colcon build 
 ```
@@ -30,6 +30,7 @@ python3 <script>.py
 ```
 
 # Linting the code (TA's only)
+
 ```bash
 sudo apt-get install clang-format-11
 ./run_clang_format.sh

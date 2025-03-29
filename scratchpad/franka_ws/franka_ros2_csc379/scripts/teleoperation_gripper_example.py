@@ -5,7 +5,7 @@ import time
 import rclpy
 from rclpy.node import Node
 
-from franka_gripper_example import FrankaGripperActionClient
+from gripper_interfaces import FrankaGripperActionClient
 
 def main(args=None):
     rclpy.init(args=args)

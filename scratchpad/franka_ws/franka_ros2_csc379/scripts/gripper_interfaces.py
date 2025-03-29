@@ -48,12 +48,12 @@ class FrankaGripperActionClient():
         self._homing_action_client = ActionClient(node_handle, Homing, '/fr3_gripper/homing')
         self._move_action_client = ActionClient(node_handle, Move, '/fr3_gripper/move')
         self._grasp_action_client = ActionClient(node_handle, Grasp, '/fr3_gripper/grasp')
-        self._cancel_action_client = node_handle.create_client(Trigger, '/fr3_gripper/stop')
+        self._cancel_action_server_client = node_handle.create_client(Trigger, '/fr3_gripper/stop')
         # while not self._cancel_action_client.wait_for_service(timeout_sec=1.0):
         #     self.get_logger().info('cancel action service not available, waiting again...')        
         self.cancel_action_req = Trigger.Request()
 
-    def _blocking_helper(self, future):
+    def _action_blocking_helper(self, future):
         wait_until_future_complete(future)
         goal_handle = future.result()
         result_future = goal_handle.get_result_async()
@@ -67,7 +67,7 @@ class FrankaGripperActionClient():
 
     def do_homing_blocking(self):
         future = self.do_homing_async()
-        return self._blocking_helper(future)
+        return self._action_blocking_helper(future)
 
     def do_move_async(self, width, speed):
         move_msg = Move.Goal() 
@@ -78,7 +78,7 @@ class FrankaGripperActionClient():
 
     def do_move_blocking(self, width, speed):
         future = self.do_move_async(width, speed)
-        return self._blocking_helper(future)
+        return self._action_blocking_helper(future)
 
     def do_grasp_async(self, width, speed, force = 50.0): 
         grasp_msg = Grasp.Goal()
@@ -90,8 +90,12 @@ class FrankaGripperActionClient():
 
     def do_grasp_blocking(self, width, speed, force = 50.0):
         future = self.do_grasp_async(width, speed, force)
-        return self._blocking_helper(future)
+        return self._action_blocking_helper(future)
 
-    def cancel_action_async(self, ):
-        self.future = self._cancel_action_client.call_async(self.cancel_action_req)
-        return rclpy.spin_until_future_complete(self, self.future)
+    def cancel_action_async(self): # -> Future
+        return self._cancel_action_server_client.call_async(self.cancel_action_req)
+    
+    def cancel_action_blocking(self):
+        future = self.cancel_action_async()
+        wait_until_future_complete(future)
+        return future.result()

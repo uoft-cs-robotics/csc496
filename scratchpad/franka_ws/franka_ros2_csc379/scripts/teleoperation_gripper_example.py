@@ -34,7 +34,7 @@ def main(args=None):
         if keys[pygame.K_c]:
             future = fgac.do_move_async(width=0.01, speed=0.2)                  
 
-        time.sleep(0.001)
+        time.sleep(0.1)
         
     spin_thread.join()
     rclpy.shutdown()

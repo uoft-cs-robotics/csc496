@@ -53,6 +53,10 @@ class FrankaGripperActionClient():
         #     self.get_logger().info('cancel action service not available, waiting again...')        
         self.cancel_action_req = Trigger.Request()
 
+        self.homing_future = None
+        self.moving_future = None
+        self.grasping_future = None
+
     def _action_blocking_helper(self, future):
         wait_until_future_complete(future)
         goal_handle = future.result()
@@ -60,36 +64,60 @@ class FrankaGripperActionClient():
         wait_until_future_complete(result_future)
         return result_future.result()
 
+    def _check_currently_being_executed(goal_future):
+        if not goal_future:
+            return False
+        wait_until_future_complete(goal_future)
+        goal_handle = goal_future.result()
+        result_future = goal_handle.get_result_async()
+        return not result_future.done()
+
+    # Will not send again, if there is one being currently executed
     def do_homing_async(self):
-        homing_msg = Homing.Goal()
         self._homing_action_client.wait_for_server()
-        return self._homing_action_client.send_goal_async(homing_msg)
+        if self._check_currently_being_executed(self.homing_future):
+            return None
+        homing_msg = Homing.Goal()
+        self.homing_future = self._homing_action_client.send_goal_async(homing_msg)
+        return self.homing_future
 
     def do_homing_blocking(self):
         future = self.do_homing_async()
+        if future is None:
+            return None
         return self._action_blocking_helper(future)
 
     def do_move_async(self, width, speed):
+        self._move_action_client.wait_for_server() 
+        if self._check_currently_being_executed(self.moving_future):
+            return None
         move_msg = Move.Goal() 
         move_msg.width = width
         move_msg.speed = speed
-        self._move_action_client.wait_for_server() 
-        return self._move_action_client.send_goal_async(move_msg)
+        self.moving_future = self._move_action_client.send_goal_async(move_msg)
+        return self.moving_future
 
     def do_move_blocking(self, width, speed):
         future = self.do_move_async(width, speed)
+        if future is None:
+            return None
         return self._action_blocking_helper(future)
 
     def do_grasp_async(self, width, speed, force = 50.0): 
+        self._grasp_action_client.wait_for_server()
+        if self._check_currently_being_executed(self.grasping_future):
+            return None
         grasp_msg = Grasp.Goal()
         grasp_msg.width = width 
         grasp_msg.speed = speed 
         grasp_msg.force = force
-        self._grasp_action_client.wait_for_server()
-        return self._grasp_action_client.send_goal_async(grasp_msg)
+        self.grasping_future = self._grasp_action_client.send_goal_async(grasp_msg)
+        return self.grasping_future
 
     def do_grasp_blocking(self, width, speed, force = 50.0):
         future = self.do_grasp_async(width, speed, force)
+        if future is None:
+            return None
         return self._action_blocking_helper(future)
 
     def cancel_action_async(self): # -> Future

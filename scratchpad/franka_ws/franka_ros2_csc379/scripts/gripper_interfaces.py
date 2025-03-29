@@ -45,14 +45,12 @@ def wait_until_future_complete(
 # This class assumes you have a spin thread running outside of it
 class FrankaGripperActionClient():
     def __init__(self, node_handle):
-        print("inited")
-        super().__init__('gripper_action_client')
         self._homing_action_client = ActionClient(node_handle, Homing, '/fr3_gripper/homing')
         self._move_action_client = ActionClient(node_handle, Move, '/fr3_gripper/move')
         self._grasp_action_client = ActionClient(node_handle, Grasp, '/fr3_gripper/grasp')
         self._cancel_action_client = node_handle.create_client(Trigger, '/fr3_gripper/stop')
-        while not self._cancel_action_client.wait_for_service(timeout_sec=1.0):
-            self.get_logger().info('cancel action service not available, waiting again...')        
+        # while not self._cancel_action_client.wait_for_service(timeout_sec=1.0):
+        #     self.get_logger().info('cancel action service not available, waiting again...')        
         self.cancel_action_req = Trigger.Request()
 
     def _blocking_helper(self, future):
